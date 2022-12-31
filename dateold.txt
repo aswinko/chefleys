@@ -1,0 +1,21 @@
+<?php 
+                                // $startdate = $records['start_date'];  
+                                // $startdate = date('d-m-Y', strtotime($records['start_date'])); 
+                                // // $enddate = date('d-m-Y', strtotime($records['end_date'])); 
+                                // // $date=date_create("$enddate");
+                                // // $enddate = $records['end_date'];
+                                // $enddate = date('d-m-Y', strtotime($records['end_date']. ' + 1 days'));
+
+                                // // $currentdate=date('Y-m-d', strtotime($currentdate));
+                                // if ($filt_date === ''){
+                            ?>
+
+                            <?php
+                                // }else if (($filt_date >= $startdate) && ($filt_date <= $enddate)){
+                            ?>
+
+                             <?php
+                                // }else{
+                                //         // echo "No records found!";
+                                //     }
+                            ?>
