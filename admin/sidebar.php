@@ -12,7 +12,7 @@
       <div class="p-2.5 mt-1 flex items-center rounded-md">
          <!-- <i class="bi bi-app-indicator px-2 py-1 rounded-md"></i> -->
          <img src="../assets/icons/bekartlogo.svg" alt="logo" class="px-2 py-1 rounded-md w-14">
-         <h1 class="text-[18px]  ml-3 text-xl text-purple-700 font-bold">Chefleys</h1>
+         <h1 class="text-[18px] ml-3 text-xl text-purple-700 font-bold">Chefleys</h1>
          <!-- <i class="bi bi-x bg-slate-200 ml-16 text-4xl font-bold cursor-pointer lg:hidden" onclick="Openbar()"></i> -->
       </div>
       <hr class="my-2 text-gray-600">

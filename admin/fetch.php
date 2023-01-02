@@ -43,16 +43,16 @@
                                 $formatted_date = $_SESSION['formatted_date'];
                                 if ($formatted_date===''){
                                     // $query = "SELECT * FROM user ORDER BY id DESC";
-                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' ORDER BY id DESC";
+                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' AND status = '1' ORDER BY id DESC";
                                 }else{
-                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' AND '$formatted_date' BETWEEN user.start_date AND user.end_date ORDER BY id DESC";
+                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' AND '$formatted_date' BETWEEN user.start_date AND user.end_date AND status = '1' ORDER BY id DESC";
                                 }
                                 $sqll = "SELECT * FROM additional_subscription WHERE package_type = '$pack' AND  date = '$formatted_date'";
                             }else{
                                 if ($formatted_date===''){
-                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' AND delivery_boy = '$request' ORDER BY id DESC";
+                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' AND delivery_boy = '$request' AND status = '1' ORDER BY id DESC";
                                 }else{
-                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' AND delivery_boy = '$request' AND '$formatted_date' BETWEEN user.start_date AND user.end_date ORDER BY id DESC";
+                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' AND delivery_boy = '$request' AND '$formatted_date' BETWEEN user.start_date AND user.end_date AND status = '1' ORDER BY id DESC";
                                 }
                                 $sqll = "SELECT * FROM additional_subscription WHERE package_type = '$pack' AND delivery_boy = '$request' AND  date = '$formatted_date'";
                             }
@@ -75,151 +75,155 @@
                     <p class="mx-2 font-bold">Total Packages : <?php echo $total_package; ?></p>
                 </div>
             </div>
-            <table class="w-full text-sm text-left text-gray-500">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                    <?php if($count){ ?>
-                        <tr>
-                            <th scope="col" class="py-3 px-8">
-                                Name
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Address
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Veg/non-veg
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Food timing
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Start date - End date
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Delivery boy
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Package type
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Remarks
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Status
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Action
-                            </th>
-                        </tr>
-                    <?php 
-                        }else{
-                            // echo "Sorry no records found!";
-                        } 
-                    ?>
-                </thead>
-                <tbody>
-                    <?php while($records=mysqli_fetch_assoc($result)){ ?>
-                        <tr class="bg-white border-b hover:bg-gray-50">
-                            <th scope="row" class="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap">
-                                <div class="pl-3">
-                                    <div class="text-base font-semibold"><?php echo $records['name']; ?></div>
-                                    <div class="font-normal text-gray-500"><?php echo $records['email']; ?></div>
-                                    <div class="font-normal text-gray-500"><?php echo $records['phone_no']; ?></div>
-                                </div>  
-                            </th>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500"><?php echo $records['address1']; ?></div>
-                                <div class="font-normal text-gray-500"><?php echo $records['address2']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500"><?php echo $records['veg_or_nonveg']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500"><?php echo $records['food_timing']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500">Start date - <?php echo $records['start_date']; ?></div>
-                                <div class="font-normal text-gray-500">End date - <?php echo $records['end_date']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500"><?php echo $records['delivery_boy']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500"><?php echo $records['package_type']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500"><?php echo $records['remarks']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center">
-                                    <div class="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div> Active
-                                </div>
-                                <!-- <div class="flex items-center">
-                                    <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div> Offline
-                                </div> -->
-                            </td>
-                            <td class="py-4 px-6">
-                                <!-- Modal toggle -->
-                                <a href="#" type="button" data-modal-toggle="editUserModal" class="font-medium text-blue-600 hover:underline">Edit user</a>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                    <?php foreach($additional_data as $additional_datas){ ?>
+            <div class="overflow-x-auto relative">
+
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                        <?php if($count){ ?>
+                            <tr>
+                                <th scope="col" class="py-3 px-8">
+                                    Name
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Address
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Veg/non-veg
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Food timing
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Start date - End date
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Delivery boy
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Package type
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Remarks
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Active/Inactive
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Action
+                                </th>
+                            </tr>
                         <?php 
-                            $user_id = $additional_datas['user_id'];
-                            if($request == ''){
-                                $sql = "SELECT * FROM user WHERE id = '$user_id'";
                             }else{
-                                $sql = "SELECT * FROM user WHERE id = '$user_id' AND delivery_boy = '$request'";
-                            }
-                            $res = mysqli_query($conn, $sql);
-                            $loop = mysqli_fetch_all($res, MYSQLI_ASSOC);
+                                // echo "Sorry no records found!";
+                            } 
                         ?>
-                        <?php foreach($loop as $row): ?>
+                    </thead>
+                    <tbody>
+                        <?php while($records=mysqli_fetch_assoc($result)){ ?>
                             <tr class="bg-white border-b hover:bg-gray-50">
                                 <th scope="row" class="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap">
                                     <div class="pl-3">
-                                        <div class="rounded-full bg-green-600 px-2 w-fit text-[10px] text-white font-semibold">Added</div>
-                                        <div class="text-base font-semibold"><?php echo $row['name']; ?></div>
-                                        <div class="font-normal text-gray-500"><?php echo $row['email']; ?></div>
-                                        <div class="font-normal text-gray-500"><?php echo $row['phone_no']; ?></div>
+                                        <div class="text-base font-semibold"><?php echo $records['name']; ?></div>
+                                        <div class="font-normal text-gray-500"><?php echo $records['email']; ?></div>
+                                        <div class="font-normal text-gray-500"><?php echo $records['phone_no']; ?></div>
                                     </div>  
                                 </th>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500"><?php echo $row['address1']; ?></div>
-                                    <div class="font-normal text-gray-500"><?php echo $row['address2']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['address1']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['address2']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500"><?php echo $row['veg_or_nonveg']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['veg_or_nonveg']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500"><?php echo $row['food_timing']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['food_timing']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500 text-[12px] lg:text-sm">Added date - <?php echo $formatted_date; ?></div>
+                                    <div class="font-normal text-gray-500">Start date - <?php echo $records['start_date']; ?></div>
+                                    <div class="font-normal text-gray-500">End date - <?php echo $records['end_date']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500"><?php echo $row['delivery_boy']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['delivery_boy']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500"><?php echo $row['package_type']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['package_type']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500"><?php echo $row['remarks']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['remarks']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="flex items-center">
-                                        <div class="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div> Active
-                                    </div>
+                                    <!-- toggle -->
+                                    <label class="inline-flex relative items-center cursor-pointer">
+                                        <input id="toggle-check" type="checkbox" value="" class="sr-only peer input-switch" <?php $records['status'] == '1' ? print 'checked' : '' ?> onclick="toggleStatus(<?php echo $records['id'] ?>); return check();" >
+                                        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all bg-red-500 peer-checked:bg-green-600"></div>
+                                        <!-- <span class="info-text ml-3 text-[10px] font-medium text-gray-900 dark:text-gray-300"></span> -->
+                                    </label>
+
                                 </td>
                                 <td class="py-4 px-6">
                                     <!-- Modal toggle -->
                                     <a href="#" type="button" data-modal-toggle="editUserModal" class="font-medium text-blue-600 hover:underline">Edit user</a>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
-                    <?php } ?>
-                </tbody>
-            </table>
+                        <?php } ?>
+                        <?php foreach($additional_data as $additional_datas){ ?>
+                            <?php 
+                                $user_id = $additional_datas['user_id'];
+                                if($request == ''){
+                                    $sql = "SELECT * FROM user WHERE id = '$user_id'";
+                                }else{
+                                    $sql = "SELECT * FROM user WHERE id = '$user_id' AND delivery_boy = '$request'";
+                                }
+                                $res = mysqli_query($conn, $sql);
+                                $loop = mysqli_fetch_all($res, MYSQLI_ASSOC);
+                            ?>
+                            <?php foreach($loop as $row): ?>
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <th scope="row" class="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap">
+                                        <div class="pl-3">
+                                            <div class="rounded-full bg-green-600 px-2 w-fit text-[10px] text-white font-semibold">Added</div>
+                                            <div class="text-base font-semibold"><?php echo $row['name']; ?></div>
+                                            <div class="font-normal text-gray-500"><?php echo $row['email']; ?></div>
+                                            <div class="font-normal text-gray-500"><?php echo $row['phone_no']; ?></div>
+                                        </div>  
+                                    </th>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500"><?php echo $row['address1']; ?></div>
+                                        <div class="font-normal text-gray-500"><?php echo $row['address2']; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500"><?php echo $row['veg_or_nonveg']; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500"><?php echo $row['food_timing']; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500 text-[12px] lg:text-sm">Added date - <?php echo $formatted_date; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500"><?php echo $row['delivery_boy']; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500"><?php echo $row['package_type']; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500"><?php echo $row['remarks']; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center">
+                                            <div class="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div> Active
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <!-- Modal toggle -->
+                                        <a href="#" type="button" data-modal-toggle="editUserModal" class="font-medium text-blue-600 hover:underline">Edit user</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
 <?php } ?>
 
 <?php
@@ -287,16 +291,16 @@
                                 $formatted_date = $_SESSION['formatted_date'];
                                 if ($formatted_date===''){
                                     // $query = "SELECT * FROM user ORDER BY id DESC";
-                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' ORDER BY id DESC";
+                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' AND status = '1' ORDER BY id DESC";
                                 }else{
-                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' AND '$formatted_date' BETWEEN user.start_date AND user.end_date ORDER BY id DESC";
+                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' AND '$formatted_date' BETWEEN user.start_date AND user.end_date AND status = '1' ORDER BY id DESC";
                                 }
                                 $sqll = "SELECT * FROM additional_subscription WHERE package_type = '$pack' AND  date = '$formatted_date'";
                             }else{
                                 if ($formatted_date===''){
-                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' AND " . $str . " ORDER BY id DESC";
+                                    $query_pack = "SELECT * FROM user WHERE package_type = '$pack' AND " . $str . " AND status =' 1' ORDER BY id DESC";
                                 }else{
-                                    $query_pack = "SELECT * FROM user WHERE  package_type = '$pack' AND " . $str . "AND '$formatted_date' BETWEEN user.start_date AND user.end_date ORDER BY id DESC";
+                                    $query_pack = "SELECT * FROM user WHERE  package_type = '$pack' AND " . $str . "AND '$formatted_date' BETWEEN user.start_date AND user.end_date AND status = '1' ORDER BY id DESC";
                                 }
                                 $sqll = "SELECT * FROM additional_subscription WHERE package_type = '$pack' AND ". $str . " AND  date = '$formatted_date'";
                             }
@@ -319,150 +323,217 @@
                     <p class="mx-2 font-bold">Total Packages : <?php echo $total_package; ?></p>
                 </div>
             </div>
-            <table class="w-full text-sm text-left text-gray-500">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                    <?php if($rows){ ?>
-                        <tr>
-                            <th scope="col" class="py-3 px-8">
-                                Name
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Address
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Veg/non-veg
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Food timing
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Start date - End date
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Delivery boy
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Package type
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Remarks
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Status
-                            </th>
-                            <th scope="col" class="py-3 px-6">
-                                Action
-                            </th>
-                        </tr>
-                    <?php 
-                        }else{
-                            // echo "Sorry no records found!";
-                        } 
-                    ?>
-                </thead>
-                <tbody>
-                    <?php foreach($res as $records){ ?>
-                        <tr class="bg-white border-b hover:bg-gray-50">
-                            <th scope="row" class="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap">
-                                <div class="pl-3">
-                                    <div class="text-base font-semibold"><?php echo $records['name']; ?></div>
-                                    <div class="font-normal text-gray-500"><?php echo $records['email']; ?></div>
-                                    <div class="font-normal text-gray-500"><?php echo $records['phone_no']; ?></div>
-                                </div>  
-                            </th>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500"><?php echo $records['address1']; ?></div>
-                                <div class="font-normal text-gray-500"><?php echo $records['address2']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500"><?php echo $records['veg_or_nonveg']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500"><?php echo $records['food_timing']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500">Start date - <?php echo $records['start_date']; ?></div>
-                                <div class="font-normal text-gray-500">End date - <?php echo $records['end_date']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500"><?php echo $records['delivery_boy']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500"><?php echo $records['package_type']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="font-normal text-gray-500"><?php echo $records['remarks']; ?></div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center">
-                                    <div class="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div> Active
-                                </div>
-                                <!-- <div class="flex items-center">
-                                    <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div> Offline
-                                </div> -->
-                            </td>
-                            <td class="py-4 px-6">
-                                <!-- Modal toggle -->
-                                <a href="#" type="button" data-modal-toggle="editUserModal" class="font-medium text-blue-600 hover:underline">Edit user</a>
-                            </td>
-                        </tr>
-                    <?php } ?>
+            <div class="overflow-x-auto relative">
 
-                    <?php foreach($additional_data as $additional_datas){ ?>
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                        <?php if($rows){ ?>
+                            <tr>
+                                <th scope="col" class="py-3 px-8">
+                                    Name
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Address
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Veg/non-veg
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Food timing
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Start date - End date
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Delivery boy
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Package type
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Remarks
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Active/Inactive
+                                </th>
+                                <th scope="col" class="py-3 px-6">
+                                    Action
+                                </th>
+                            </tr>
                         <?php 
-                            $user_id = $additional_datas['user_id'];
-                            if ($checkbox_request == 'all') {
-                                $sql = "SELECT * FROM user WHERE id = '$user_id'";
                             }else{
-                                $sql = "SELECT * FROM user WHERE id = '$user_id' AND  $str";
-                            }
-                            $res = mysqli_query($conn, $sql);
-                            $loop = mysqli_fetch_all($res, MYSQLI_ASSOC);
+                                // echo "Sorry no records found!";
+                            } 
                         ?>
-                        <?php foreach($loop as $row): ?>
+                    </thead>
+                    <tbody>
+                        <?php foreach($res as $records){ ?>
                             <tr class="bg-white border-b hover:bg-gray-50">
                                 <th scope="row" class="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap">
                                     <div class="pl-3">
-                                        <div class="rounded-full bg-green-600 px-2 w-fit text-[10px] text-white font-semibold">Added</div>
-                                        <div class="text-base font-semibold"><?php echo $row['name']; ?></div>
-                                        <div class="font-normal text-gray-500"><?php echo $row['email']; ?></div>
-                                        <div class="font-normal text-gray-500"><?php echo $row['phone_no']; ?></div>
+                                        <div class="text-base font-semibold"><?php echo $records['name']; ?></div>
+                                        <div class="font-normal text-gray-500"><?php echo $records['email']; ?></div>
+                                        <div class="font-normal text-gray-500"><?php echo $records['phone_no']; ?></div>
                                     </div>  
                                 </th>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500"><?php echo $row['address1']; ?></div>
-                                    <div class="font-normal text-gray-500"><?php echo $row['address2']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['address1']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['address2']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500"><?php echo $row['veg_or_nonveg']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['veg_or_nonveg']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500"><?php echo $row['food_timing']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['food_timing']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500 text-[12px] lg:text-sm">Added date - <?php echo $formatted_date; ?></div>
+                                    <div class="font-normal text-gray-500">Start date - <?php echo $records['start_date']; ?></div>
+                                    <div class="font-normal text-gray-500">End date - <?php echo $records['end_date']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500"><?php echo $row['delivery_boy']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['delivery_boy']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500"><?php echo $row['package_type']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['package_type']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="font-normal text-gray-500"><?php echo $row['remarks']; ?></div>
+                                    <div class="font-normal text-gray-500"><?php echo $records['remarks']; ?></div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="flex items-center">
-                                        <div class="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div> Active
-                                    </div>
+                                    <!-- toggle -->
+                                    <label class="inline-flex relative items-center cursor-pointer">
+                                        <input id="toggle-check" type="checkbox" value="" class="sr-only peer input-switch" <?php $records['status'] == '1' ? print 'checked' : '' ?> onclick="toggleStatus(<?php echo $records['id'] ?>); return check();" >
+                                        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all bg-red-500 peer-checked:bg-green-600"></div>
+                                        <!-- <span class="info-text ml-3 text-[10px] font-medium text-gray-900 dark:text-gray-300"></span> -->
+                                    </label>
+
                                 </td>
                                 <td class="py-4 px-6">
                                     <!-- Modal toggle -->
                                     <a href="#" type="button" data-modal-toggle="editUserModal" class="font-medium text-blue-600 hover:underline">Edit user</a>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
-                    <?php } ?>
-                </tbody>
-            </table>
+                        <?php } ?>
+    
+                        <?php foreach($additional_data as $additional_datas){ ?>
+                            <?php 
+                                $user_id = $additional_datas['user_id'];
+                                if ($checkbox_request == 'all') {
+                                    $sql = "SELECT * FROM user WHERE id = '$user_id'";
+                                }else{
+                                    $sql = "SELECT * FROM user WHERE id = '$user_id' AND  $str";
+                                }
+                                $res = mysqli_query($conn, $sql);
+                                $loop = mysqli_fetch_all($res, MYSQLI_ASSOC);
+                            ?>
+                            <?php foreach($loop as $row): ?>
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <th scope="row" class="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap">
+                                        <div class="pl-3">
+                                            <div class="rounded-full bg-green-600 px-2 w-fit text-[10px] text-white font-semibold">Added</div>
+                                            <div class="text-base font-semibold"><?php echo $row['name']; ?></div>
+                                            <div class="font-normal text-gray-500"><?php echo $row['email']; ?></div>
+                                            <div class="font-normal text-gray-500"><?php echo $row['phone_no']; ?></div>
+                                        </div>  
+                                    </th>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500"><?php echo $row['address1']; ?></div>
+                                        <div class="font-normal text-gray-500"><?php echo $row['address2']; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500"><?php echo $row['veg_or_nonveg']; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500"><?php echo $row['food_timing']; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500 text-[12px] lg:text-sm">Added date - <?php echo $formatted_date; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500"><?php echo $row['delivery_boy']; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500"><?php echo $row['package_type']; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="font-normal text-gray-500"><?php echo $row['remarks']; ?></div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center">
+                                            <div class="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div> Active
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <!-- Modal toggle -->
+                                        <a href="#" type="button" data-modal-toggle="editUserModal" class="font-medium text-blue-600 hover:underline">Edit user</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
 <?php } ?>
+
+
+<?php
+    
+    if(isset($_POST['tId'])){
+        $tId = $_POST['tId'];
+        $sql = "SELECT * FROM user WHERE id = '$tId'";
+        $result = mysqli_query($conn, $sql);
+        $data = mysqli_fetch_assoc($result);
+        $status = $data['status'];
+
+        if($status == '1'){
+            $status = '0';
+        }else{
+            $status = '1';
+        }
+
+        $update = "UPDATE user SET status = '$status' WHERE id = '$tId'";
+        $res = mysqli_query($conn, $update);
+        if($res){
+            echo $status;
+        }
+    }
+
+?>
+
+<script type="text/javascript">
+        function toggleStatus(id){
+            var id = id;
+            $.ajax({
+                url:"fetch.php",
+                type:"POST",
+                data:{tId:id},
+                success:function(result){
+                    if(result=='1'){
+
+                    }else{
+
+                    }
+                }
+            });
+        }
+</script>
+<script>
+    function check() {
+        
+        if(document.getElementById("toggle-check").checked == true)
+        {
+            // window.location.href="./manage_user.php";
+            setTimeout(function(){ 
+                window.location.reload();
+            }, 600);
+            // window.location.reload();
+        }else{
+            setTimeout(function(){ 
+                window.location.reload();
+            }, 600);
+
+        }
+        // location.reload();
+        // $("#package_count").load("package_count.php");
+    }
+</script>

@@ -60,7 +60,7 @@
                                         Password
                                     </div>
                                 </div>
-                                <input name="password" class="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="" placeholder="Enter your password">
+                                <input name="password" class="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="password" placeholder="Enter your password">
                             </div>
                             <div class="mt-10">
                                 <button type="submit" name="submit" class="bg-indigo-500 text-gray-100 p-4 w-full rounded-full tracking-wide
